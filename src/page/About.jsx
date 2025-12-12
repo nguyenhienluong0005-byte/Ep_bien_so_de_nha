@@ -30,7 +30,7 @@ function About() {
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.7 }}
 >
-  <span className="block text-yellow-500">ÉP BIỂN SỐ THỨC</span>
+  <span className="block text-yellow-500">ÉP BIỂN SỐ ĐỆ NHẤT</span>
   <span className="block">Đỉnh Cao Nghệ Thuật Ép Biển Số Việt</span>
 </motion.h1>
 
@@ -42,7 +42,7 @@ function About() {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          Tại <strong>ÉP BIỂN SỐ THỨC</strong>, chúng tôi không chỉ phục hồi biển số —
+          Tại <strong>ÉP BIỂN SỐ ĐỆ NHẤT</strong>, chúng tôi không chỉ phục hồi biển số —
           mà còn mang đến <em>nghệ thuật hoàn thiện tỉ mỉ</em> trong từng chi tiết.
           Mỗi tấm biển đều được ép bằng công nghệ tiên tiến, đảm bảo bền đẹp, sáng bóng và đúng chuẩn <strong>Bộ GTVT</strong>.
         </motion.p>
@@ -61,7 +61,7 @@ function About() {
         >
           <img
             src="/cuahang.jpg"
-            alt="Cửa hàng ÉP BIỂN SỐ THỨC Biên Hòa"
+            alt="Cửa hàng ÉP BIỂN SỐ ĐỆ NHẤT"
             className="w-full h-[500px] object-cover transition-all duration-700 group-hover:brightness-110"
             loading="lazy"
           />
@@ -103,7 +103,7 @@ function About() {
             Hành Trình Vươn Tới Đỉnh Cao
           </h2>
           {[
-            { year: "2017", title: "Khởi đầu từ niềm đam mê", desc: "Thức bắt đầu nghề ép biển từ đam mê phục hồi cái đẹp cho xe." },
+            { year: "2017", title: "Khởi đầu từ niềm đam mê", desc: "Đệ Nhất bắt đầu nghề ép biển từ đam mê phục hồi cái đẹp cho xe." },
             { year: "2020", title: "Ứng dụng công nghệ Titan", desc: "Đưa công nghệ ép Titan 3mm đầu tiên về Biên Hòa." },
             { year: "2023", title: "Nâng cấp toàn bộ xưởng", desc: "Trang bị máy móc CNC & ép nhiệt tự động." },
             { year: "2025", title: "Uy tín hàng đầu miền Nam", desc: "Trở thành địa chỉ top đầu trong lĩnh vực ép biển số ô tô & xe máy." },
@@ -130,7 +130,7 @@ function About() {
           transition={{ duration: 0.6 }}
         >
           <h3 className="text-3xl font-bold mb-4 text-yellow-300">
-            Cam Kết Từ ÉP BIỂN SỐ THỨC
+            Cam Kết Từ ÉP BIỂN SỐ ĐỆ NHẤT
           </h3>
           <ul className="space-y-3 text-lg text-indigo-50">
             <li className="flex items-center justify-center gap-2">
@@ -163,17 +163,17 @@ function About() {
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Bản đồ ÉP BIỂN SỐ THỨC Biên Hòa"
+            title="Bản đồ ÉP BIỂN SỐ ĐỆ NHẤT TPHCM"
           ></iframe>
           <div className="absolute top-2 left-2 bg-indigo-700 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-            🗺️ Xem vị trí cửa hàng ÉP BIỂN SỐ THỨC
+            🗺️ Xem vị trí cửa hàng ÉP BIỂN SỐ ĐỆ NHẤT
           </div>
         </motion.div>
 
         {/* Nút chỉ đường */}
         <div className="text-center mb-16">
           <a
-            href="https://www.google.com/maps/dir/?api=1&destination=Thức+Ép+Biển+Số+Biên+Hòa"
+            href="https://www.google.com/maps/dir/?api=1&destination=Đệ+Nhất+Ép+Biển+Số+TPHCM"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-yellow-400 text-gray-900 font-semibold px-8 py-3 rounded-full shadow-md hover:bg-yellow-300 transition-all"
@@ -185,14 +185,14 @@ function About() {
         {/* Footer */}
         <div className="mt-10 bg-gradient-to-b from-indigo-700 via-indigo-800 to-gray-900 text-white rounded-t-3xl py-10 px-6 text-center shadow-inner">
           <p className="text-lg font-semibold text-yellow-400 mb-3">
-            ÉP BIỂN SỐ THỨC — Tận tâm • Uy tín • Chất lượng
+            ÉP BIỂN SỐ ĐỆ NHẤT — Tận tâm • Uy tín • Chất lượng
           </p>
           <p className="max-w-3xl mx-auto text-gray-300 text-sm leading-relaxed mb-4">
             Chuyên ép, phục hồi và làm mới biển số xe máy & ô tô bằng <strong>mica dày 3mm cao cấp</strong>, đạt chuẩn <strong>ISO Function quốc tế</strong>.  
             Sản phẩm được <strong>bảo hành 24 tháng</strong> — đảm bảo độ bền, sáng bóng và thẩm mỹ lâu dài.
           </p>
           <p className="text-gray-400 text-xs">
-            © {new Date().getFullYear()} <strong>ÉP BIỂN SỐ THỨC</strong>. Mọi quyền được bảo lưu.
+            © {new Date().getFullYear()} <strong>ÉP BIỂN SỐ ĐỆ NHẤT</strong>. Mọi quyền được bảo lưu.
           </p>
         </div>
       </div>
