@@ -50,7 +50,7 @@ export default function Contact() {
           {/* Title */}
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
             <span className="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent drop-shadow-2xl block mb-3">
-              ÉP BIỂN SỐ ĐỘ NHẤT
+              ÉP BIỂN SỐ ĐỆ NHẤT
             </span>
             <span className="text-white text-3xl md:text-4xl font-light">
               Hỗ Trợ & Tư Vấn 24/7
@@ -245,7 +245,7 @@ export default function Contact() {
             
             <div className="relative border-4 border-amber-400/30 rounded-3xl overflow-hidden shadow-2xl">
               <iframe
-                title="ÉP BIỂN SỐ ĐỘ NHẤT"
+                title="ÉP BIỂN SỐ ĐỆ NHẤT"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.9438986598775!2d106.70067060516612!3d10.738807354787806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fc4f33014f5%3A0xdcf65536c8e1f497!2zw4lwIEJp4buDbiBT4buRIMSQ4buHIE5o4bqldA!5e0!3m2!1svi!2s!4v1765463506586!5m2!1svi!2s"
                 width="100%"
                 height="500"
@@ -273,7 +273,7 @@ export default function Contact() {
             ))}
           </div>
           <p className="text-gray-400 text-sm max-w-2xl mx-auto leading-relaxed">
-            © 2025 <span className="font-bold text-amber-400">ÉP BIỂN SỐ ĐỘ NHẤT</span>
+            © 2025 <span className="font-bold text-amber-400">ÉP BIỂN SỐ ĐỆ NHẤT</span>
             <br />
             Dịch vụ ép & phục hồi biển số chuyên nghiệp – uy tín hàng đầu
           </p>

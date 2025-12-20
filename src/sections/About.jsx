@@ -16,35 +16,37 @@ function About() {
     "https://i.postimg.cc/J0YbzMHZ/18.jpg",
   ];
 
-  const features = [
-    {
-      icon: <FaAward className="text-3xl" />,
-      title: "Đội Ngũ Chuyên Nghiệp",
-      desc: "Thợ lành nghề với hơn 7 năm kinh nghiệm, tỉ mỉ từng chi tiết"
-    },
-    {
-      icon: <FaShieldAlt className="text-3xl" />,
-      title: "Vật Liệu Cao Cấp",
-      desc: "Mica & inox nhập khẩu, bền đẹp vượt thời gian"
-    },
-    {
-      icon: <FaClock className="text-3xl" />,
-      title: "Bảo Hành 24 Tháng",
-      desc: "Ép nhanh - Giao ngay - Đúng chuẩn GTVT"
-    },
-    {
-      icon: <FaStar className="text-3xl" />,
-      title: "Chất Lượng Đỉnh Cao",
-      desc: "Sắc nét, chống oxy hóa, bền màu nhiều năm"
-    }
-  ];
+ const features = [
+  {
+    icon: <FaAward className="text-3xl" />,
+    title: "Tay Nghề Trên 15 Năm",
+    desc: "Thợ lành nghề, thao tác kỹ – cẩn thận – tỉ mỉ từng chi tiết"
+  },
+  {
+    icon: <FaShieldAlt className="text-3xl" />,
+    title: "Mica Chuẩn ISO – Inox Nguyên Khối",
+    desc: "Mica dày 3 ly, không ố vàng, kết hợp inox cho độ bền vượt trội"
+  },
+  {
+    icon: <FaClock className="text-3xl" />,
+    title: "Máy Ép Thủy Lực Công Suất Lớn",
+    desc: "Ép chuẩn form, góc cạnh sắc sảo, chắc chắn, làm nhanh"
+  },
+  {
+    icon: <FaStar className="text-3xl" />,
+    title: "Bảo Hành 2 Năm",
+    desc: "Thành phẩm sắc nét, bền màu, bảo hành rõ ràng 24 tháng"
+  }
+];
+
 
   const advantages = [
-    "Đội ngũ thợ lành nghề, tỉ mỉ từng chi tiết",
-    "Vật liệu cao cấp: mica – inox bền đẹp vượt thời gian",
-    "Bảo hành 24 tháng – Ép nhanh – Giao ngay – Đúng chuẩn GTVT",
-    "Sản phẩm sắc nét, chống oxy hoá, bền màu nhiều năm"
-  ];
+  "Chuyên ép biển số ô tô – xe máy, phục hồi biển số gãy, lún đế, mờ sơn",
+  "Sử dụng máy ép thủy lực công suất lớn, ép chuẩn form – chắc chắn",
+  "Mica chuẩn ISO dày 3 ly kết hợp inox nguyên khối, không ố vàng",
+  "Tay nghề thợ hơn 15 năm, sản phẩm sắc nét – bảo hành 2 năm"
+];
+
 
   return (
     <section
@@ -81,22 +83,31 @@ function About() {
             <span className="text-gray-900"> ĐỆ NHẤT</span>
           </h2>
 
-          <motion.p
-            className="max-w-3xl mx-auto text-gray-600 text-base md:text-lg leading-relaxed px-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Địa chỉ uy tín chuyên{" "}
-            <span className="text-blue-700 font-semibold">
-              phục hồi – ép mới – làm đẹp biển số xe máy & ô tô
-            </span>{" "}
-            bằng công nghệ hiện đại. Với{" "}
-            <span className="text-blue-700 font-semibold">hơn 7 năm kinh nghiệm</span>,
-            chúng tôi cam kết mang đến chất lượng{" "}
-            <span className="italic text-blue-600">đẹp như mới – sắc nét – bền vượt thời gian</span>
-          </motion.p>
+      <motion.p
+          className="max-w-3xl mx-auto text-gray-600 text-base md:text-lg leading-relaxed px-4"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <span className="text-blue-700 font-semibold">ÉP BIỂN SỐ ĐỆ NHẤT</span> chuyên ép biển số{" "}
+          <span className="font-semibold">ô tô – xe máy</span> và phục hồi các tình trạng{" "}
+          <span className="font-semibold">
+            biển số gãy, lún đế, mờ sơn
+          </span>.
+          <br className="hidden md:block" />
+          Chúng tôi sử dụng <span className="text-blue-700 font-semibold">
+            máy ép thủy lực công suất lớn
+          </span>, vật liệu <span className="font-semibold">mica chuẩn ISO dày 3 ly</span> kết hợp{" "}
+          <span className="font-semibold">inox nguyên khối</span>, cùng tay nghề thợ{" "}
+          <span className="italic text-blue-600 font-semibold">
+            hơn 15 năm kinh nghiệm
+          </span>,
+          cam kết sản phẩm <span className="font-semibold">
+            sắc nét – chắc chắn – bền đẹp theo thời gian
+          </span>.
+        </motion.p>
+
         </motion.div>
 
         {/* ===== FEATURES GRID ===== */}
