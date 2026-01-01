@@ -12,7 +12,7 @@ function About() {
     "https://i.postimg.cc/RFf2GG2P/6.jpg",
     "https://i.postimg.cc/CM7c0WCP/26.jpg",
     "https://i.postimg.cc/kGvzPGJT/18.jpg",
-    "https://i.postimg.cc/KzLCQQdX/8.jpgg",
+    "https://i.postimg.cc/KzLCQQdX/8.jpg",
     "https://i.postimg.cc/nz7NTT6J/9.jpg",
   ];
 
@@ -166,7 +166,15 @@ function About() {
               {[...images, ...images].map((src, i) => (
                 <motion.div
                   key={i}
-                  className="min-w-[280px] sm:min-w-[340px] md:min-w-[420px] h-[200px] sm:h-[230px] md:h-[280px] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300"
+                  className="
+                            min-w-[200px] h-[140px]
+                            sm:min-w-[260px] sm:h-[180px]
+                            md:min-w-[340px] md:h-[220px]
+                            lg:min-w-[420px] lg:h-[280px]
+                            rounded-2xl overflow-hidden shadow-xl
+                            transition-shadow duration-300
+                          "
+
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
                 >
@@ -340,9 +348,6 @@ function About() {
         }
         .animate-slide {
           animation: slide 35s linear infinite;
-        }
-        .animate-slide:hover {
-          animation-play-state: paused;
         }
       `}</style>
     </section>
