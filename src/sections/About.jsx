@@ -3,17 +3,17 @@ import { FaCheckCircle, FaAward, FaShieldAlt, FaClock, FaStar } from "react-icon
 
 function About() {
   const images = [
-    "https://i.postimg.cc/3wq9njxC/19.jpg",
-    "https://i.postimg.cc/wBrF05jQ/20.jpg",
-    "https://i.postimg.cc/wBrF05jn/210.jpg",
-    "https://i.postimg.cc/W4ySXm17/22.jpg",
-    "https://i.postimg.cc/25tT2dSw/23.jpg",
-    "https://i.postimg.cc/Pq7K2b5V/24.jpg",
-    "https://i.postimg.cc/W4ySXm1f/25.jpg",
-    "https://i.postimg.cc/k5HwfNgp/26.jpg",
-    "https://i.postimg.cc/ZqQjVP5Q/27.jpg",
-    "https://i.postimg.cc/W4ySXm1C/28.jpg",
-    "https://i.postimg.cc/J0YbzMHZ/18.jpg",
+    "https://i.postimg.cc/yxHtGcH1/10.jpg",
+    "https://i.postimg.cc/cCS2zwS4/11.jpg",
+    "https://i.postimg.cc/x82hZM28/12.jpg",
+    "https://i.postimg.cc/GtCVfGCB/13.jpg",
+    "https://i.postimg.cc/L53wF59T/16.png",
+    "https://i.postimg.cc/bJb4LLKj/7.jpg",
+    "https://i.postimg.cc/RFf2GG2P/6.jpg",
+    "https://i.postimg.cc/CM7c0WCP/26.jpg",
+    "https://i.postimg.cc/kGvzPGJT/18.jpg",
+    "https://i.postimg.cc/KzLCQQdX/8.jpgg",
+    "https://i.postimg.cc/nz7NTT6J/9.jpg",
   ];
 
  const features = [
@@ -201,8 +201,7 @@ function About() {
             <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-4 md:p-8 shadow-2xl">
               <div className="relative w-full max-w-md mx-auto aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/50">
                 <iframe
-                  src="https://www.youtube.com/embed/mXWFH8Qhsz4?controls=1&autoplay=0"
-                  title="YouTube - ÉP BIỂN SỐ ĐỆ NHẤT"
+                  src="https://www.youtube.com/embed/ltAOH7ls_Xc?controls=1&autoplay=0"                  title="YouTube - ÉP BIỂN SỐ ĐỆ NHẤT"
                   className="absolute inset-0 w-full h-full"
                   allowFullScreen
                 ></iframe>

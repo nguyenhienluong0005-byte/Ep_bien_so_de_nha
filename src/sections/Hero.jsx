@@ -2,11 +2,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const images = [
-  "https://i.postimg.cc/fyKcnM56/1.jpg",
-  "https://i.postimg.cc/vTzrFG3y/2.jpg",
-  "https://i.postimg.cc/hvrLWKpF/3.jpg",
-  "https://i.postimg.cc/0jfYR9cs/4.jpg",
-  "https://i.postimg.cc/dQmmT9vh/5.jpg",
+  "https://i.postimg.cc/kGvzPGJT/18.jpg",
+  "https://i.postimg.cc/KjDwhjGH/19.jpg",
+  "https://i.postimg.cc/cCB2GCxP/20.jpg",
+  "https://i.postimg.cc/SRh3PCh6/14.jpg",
+  "https://i.postimg.cc/qRnWQQWW/2.jpg",
 ];
 
 function Hero() {
