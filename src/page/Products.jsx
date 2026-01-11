@@ -82,7 +82,7 @@ export default function Products() {
 
   return (
     <section id="products" className="bg-white">
-      <div className="pt-32 pb-20">
+      <div className="pt-16 pb-20">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
           <motion.div

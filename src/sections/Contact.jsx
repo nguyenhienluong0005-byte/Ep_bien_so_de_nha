@@ -1,6 +1,10 @@
 import { FaFacebookF, FaPhoneAlt, FaMapMarkerAlt, FaTiktok } from "react-icons/fa";
 
 const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/cPNwc5zueyXv4muG7";
+const FACEBOOK_URL = "https://www.facebook.com/share/17Y8cWR9aF/?mibextid=wwXIfr";
+const TIKTOK_URL = "https://www.tiktok.com/@epbiensodenhat?_r=1&_t=ZS-925uZL23U5o";
+const HOTLINE_TEL = "0797910179";
+const HOTLINE_DISPLAY = "07979.101.79";
 
 function Contact() {
   return (
@@ -23,7 +27,7 @@ function Contact() {
           </h2>
 
           <p className="mt-3 text-sm md:text-base text-neutral-600 leading-relaxed">
-            Nhấn vào bất kỳ nút nào để mở Google Maps và chỉ đường đến cửa hàng.
+            Chọn nút bạn muốn: Chỉ đường (Google Maps), Facebook hoặc TikTok.
           </p>
         </div>
 
@@ -37,9 +41,7 @@ function Contact() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-neutral-900">
-                  Địa điểm
-                </p>
+                <p className="text-sm font-semibold text-neutral-900">Địa điểm</p>
                 <a
                   href={GOOGLE_MAPS_URL}
                   target="_blank"
@@ -57,23 +59,20 @@ function Contact() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-neutral-900">
-                  Hotline
-                </p>
+                <p className="text-sm font-semibold text-neutral-900">Hotline</p>
 
-                {/* Nếu bạn muốn hotline cũng mở Maps thì đổi href thành GOOGLE_MAPS_URL */}
                 <a
-                  href="tel:0797910179"
+                  href={`tel:${HOTLINE_TEL}`}
                   className="mt-1 inline-flex text-sm text-neutral-600 hover:text-neutral-900 underline underline-offset-4"
                 >
-                  07979 101 79
+                  {HOTLINE_DISPLAY}
                 </a>
               </div>
             </div>
 
             {/* CTA buttons */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              {/* TẤT CẢ NÚT -> GOOGLE MAPS */}
+              {/* Chỉ đường -> Maps */}
               <a
                 href={GOOGLE_MAPS_URL}
                 target="_blank"
@@ -83,32 +82,34 @@ function Contact() {
                 <FaMapMarkerAlt /> Chỉ đường
               </a>
 
+              {/* Facebook -> Facebook */}
               <a
-                href={GOOGLE_MAPS_URL}
+                href={FACEBOOK_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-neutral-300 text-neutral-900 text-sm font-semibold hover:bg-neutral-100 transition"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-neutral-900 text-white text-sm font-semibold hover:bg-neutral-800 transition"
               >
-                <FaFacebookF /> Facebook (mở Maps)
+                <FaFacebookF /> Facebook
               </a>
 
+              {/* TikTok -> TikTok */}
               <a
-                href={GOOGLE_MAPS_URL}
+                href={TIKTOK_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-neutral-300 text-neutral-900 text-sm font-semibold hover:bg-neutral-100 transition"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-neutral-900 text-white text-sm font-semibold hover:bg-neutral-800 transition"
               >
-                <FaTiktok /> TikTok (mở Maps)
+                <FaTiktok /> TikTok
               </a>
             </div>
 
-            {/* Option: nút gọi riêng (nếu muốn giữ) */}
+            {/* Nút gọi riêng */}
             <div className="mt-3">
               <a
-                href="tel:0797910179"
+                href={`tel:${HOTLINE_TEL}`}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-neutral-300 text-neutral-900 text-sm font-semibold hover:bg-neutral-100 transition w-full sm:w-auto"
               >
-                <FaPhoneAlt /> Gọi ngay
+                <FaPhoneAlt /> Gọi ngay: {HOTLINE_DISPLAY}
               </a>
             </div>
           </div>

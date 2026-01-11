@@ -14,7 +14,7 @@ function Hero() {
   const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
-    const introTimer = setTimeout(() => setShowIntro(false), 3500);
+    const introTimer = setTimeout(() => setShowIntro(false), 1500);
     return () => clearTimeout(introTimer);
   }, []);
 
@@ -120,14 +120,15 @@ function Hero() {
           transition={{ delay: 0.8, duration: 0.7 }}
         >
           <div className="h-[2px] w-10 sm:w-14 bg-white/80 rounded" />
-          <p className="text-base sm:text-lg md:text-xl font-bold text-yellow-200 tracking-wide">
+          <p className="text-base sm:text-lg md:text-xl font-black text-yellow-200 tracking-wide">
             CHUYÊN NGHIỆP • UY TÍN
           </p>
+
           <div className="h-[2px] w-10 sm:w-14 bg-white/80 rounded" />
         </motion.div>
 
         <motion.p
-          className="text-sm sm:text-base md:text-lg text-white/85 font-medium"
+          className="text-sm sm:text-base md:text-lg text-white/85 font-extrabold"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.0, duration: 0.8 }}
@@ -167,22 +168,36 @@ function Hero() {
         transition={{ delay: 0.6, duration: 0.8 }}
         className="max-w-xl"
       >
-        <h1 className="text-white text-2xl md:text-5xl font-medium tracking-tight">
-          Ép biển số ĐỆ NHẤT
-        </h1>
+    <h1
+  className="text-white text-2xl md:text-5xl font-black tracking-tight"
+  style={{ textShadow: "0 6px 22px rgba(0,0,0,0.95)" }}
+>
+  ÉP BIỂN SỐ ĐỆ NHẤT
+</h1>
 
-        <p className="mt-4 text-lg text-white/80 leading-relaxed">
-          Chuẩn form. Phẳng đẹp. Bền theo thời gian.
-        </p>
+<p
+  className="mt-4 text-3XL text-white/90 leading-relaxed font-extrabold"
+  style={{ textShadow: "0 4px 16px rgba(0,0,0,0.95)" }}
+>
+  Chuẩn form. Phẳng đẹp. Bền theo thời gian.
+</p>
 
-        <div className="mt-8 flex gap-4">
-          <button className="px-6 py-3 bg-white text-black text-sm font-semibold rounded-full">
-            Xem quy trình
-          </button>
-          <button className="px-6 py-3 border border-white/40 text-white text-sm rounded-full">
-            Liên hệ
-          </button>
-        </div>
+      <div className="mt-8 flex gap-4">
+  <a
+    href="/products"
+    className="px-6 py-3 bg-white text-black text-sm font-extrabold rounded-full inline-flex items-center"
+  >
+    Xem sản phẩm
+  </a>
+
+  <a
+    href="tel:0797910179"
+    className="px-6 py-3 bg-white text-black text-sm font-extrabold rounded-full inline-flex items-center"
+  >
+    Liên hệ: 0797910179
+  </a>
+</div>
+
       </motion.div>
     </div>
   </div>

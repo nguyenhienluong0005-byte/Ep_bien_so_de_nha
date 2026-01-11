@@ -19,10 +19,6 @@ export default function Restore12StepsLight() {
   const heroImages = useMemo(
     () => [
       "/cuahang.jpg",
-      "https://i.postimg.cc/nhpFT5Rn/48.jpg",
-      "https://i.postimg.cc/vZbYXjqW/61.jpg",
-      "https://i.postimg.cc/br90nWVY/30.jpg",
-      "https://i.postimg.cc/1zSdn38C/quan.jpg",
     ],
     []
   );
@@ -235,75 +231,8 @@ export default function Restore12StepsLight() {
       {/* MAIN */}
       <div className="max-w-7xl mx-auto px-6 py-20 md:py-28">
         {/* Header section */}
-        <motion.div
-          className="max-w-3xl"
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs text-neutral-600">
-            <span className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
-            12 bước phục hồi
-          </div>
+  
 
-          <h2 className="mt-4 text-3xl md:text-4xl font-medium text-neutral-900 tracking-tight">
-            Minh bạch quy trình – làm kỹ từng công đoạn
-          </h2>
-
-          <p className="mt-3 text-sm md:text-base text-neutral-600 leading-relaxed">
-            Mỗi bước đều có mục tiêu rõ ràng để ra thành phẩm đẹp, chắc, sáng và bền theo thời gian.
-          </p>
-        </motion.div>
-
-        {/* Steps grid */}
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {steps.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <motion.div
-                key={step.num}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.04 }}
-                className="
-                  rounded-3xl border border-neutral-200 bg-white p-5 md:p-6
-                  shadow-sm hover:shadow-md transition
-                "
-              >
-                <div className="flex items-start gap-3">
-                  <div className="shrink-0">
-                    <div className="w-10 h-10 rounded-2xl border border-neutral-200 bg-neutral-50 flex items-center justify-center text-neutral-900">
-                      <Icon className="text-lg" />
-                    </div>
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center justify-center w-9 h-6 rounded-full bg-neutral-900 text-white text-xs font-semibold">
-                        #{step.num}
-                      </span>
-                      <h3 className="text-base font-semibold text-neutral-900">
-                        {step.title}
-                      </h3>
-                    </div>
-
-                    <p className="mt-2 text-sm text-neutral-600 leading-relaxed">
-                      {step.desc}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-4 h-px bg-neutral-200/70" />
-                <div className="mt-3 flex items-center gap-2 text-xs text-neutral-500">
-                  <FaStar className="text-amber-500" />
-                  Chuẩn xưởng • Làm kỹ
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
 
         {/* Showcase / Store */}
         <motion.div
