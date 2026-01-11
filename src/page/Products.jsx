@@ -1,257 +1,369 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Contact from "../sections/Contact";
 import Footer from "../sections/Footer";
 
+import { db } from "../firebase";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+
 export default function Products() {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  // Data from Firestore
+  const [items, setItems] = useState([]); // before/after docs: {id, before, after, ...}
+  const [realImages, setRealImages] = useState([]); // real docs: {id, url, ...}
 
-  const items = [
-    {
-      before: "https://i.postimg.cc/br90nWVY/30.jpg",
-      after: "https://i.postimg.cc/zXqmnpgt/6.jpg",
-    },
-    {
-      before: "https://i.postimg.cc/C5sC8Xrh/32.jpg",
-      after: "https://i.postimg.cc/vTt7nk2Q/33.jpg",
-    },
-    {
-      before: "https://i.postimg.cc/kGvNSzY4/34.jpg",
-      after: "https://i.postimg.cc/sx4PWqH2/35.jpg",
-    },
-    {
-      before: "https://i.postimg.cc/zGDZP26b/71.jpg",
-      after: "https://i.postimg.cc/QCJg7wYV/37.jpg",
-    },
-    {
-      before: "https://i.postimg.cc/d3jRCpNh/38.jpg",
-      after: "https://i.postimg.cc/QCJg7wYK/39.jpg",
-    },
-    {
-      before: "https://i.postimg.cc/qqxcKSD3/40.jpg",
-      after: "https://i.postimg.cc/Hn90MRv7/41.jpg",
-    },
-  ];
+  // Modal state:
+  // { type: 'pair', index } | { type: 'real', index } | null
+  const [modal, setModal] = useState(null);
 
-  const realImages = [
-    "https://i.postimg.cc/0jfYR9cs/4.jpg",
-    "https://i.postimg.cc/dQmmT9vh/5.jpg",
-    "https://i.postimg.cc/XY4jxh2R/42.jpg",
-    "https://i.postimg.cc/rFSy1cJV/43.jpg",
-    "https://i.postimg.cc/PrmfWh4T/44.jpg",
-    "https://i.postimg.cc/kXxMQ9c7/45.jpg",
-    "https://i.postimg.cc/htcDMwyc/46.jpg",
-    "https://i.postimg.cc/nhpFT5RZ/47.jpg",
-    "https://i.postimg.cc/nhpFT5Rn/48.jpg",
-    "https://i.postimg.cc/Dwnv5Dj2/49.jpg",
-    "https://i.postimg.cc/bwpyLMCY/50.jpg",
-    "https://i.postimg.cc/9QCm1S80/52.jpg",
-    "https://i.postimg.cc/7ZwHXcsb/53.jpg",
-    "https://i.postimg.cc/2SrkTJc1/54.jpg",
-    "https://i.postimg.cc/jStxv9gW/55.jpg",
-    "https://i.postimg.cc/Vkmf4TGr/56.jpg",
-    "https://i.postimg.cc/bwpyLMCb/58.jpg",
-    "https://i.postimg.cc/P5TXKc3Y/59.jpg",
-    "https://i.postimg.cc/52b4pG78/60.jpg",
-    "https://i.postimg.cc/vZbYXjqW/61.jpg",
-    "https://i.postimg.cc/Z5HTQc2W/62.jpg",
-    "https://i.postimg.cc/cLhszm2r/63.jpg",
-    "https://i.postimg.cc/htsSYr6Q/64.jpg",
-    "https://i.postimg.cc/6pc9P0gM/66.jpg",
-    "https://i.postimg.cc/GmKcfQVq/67.jpg",
-    "https://i.postimg.cc/fRCwPKpr/68.jpg",
-    "https://i.postimg.cc/g2sY7DQQ/70.jpg",
-  ];
+  // Mobile: đang xem TRƯỚC hay SAU trong modal pair
+  const [mobileSide, setMobileSide] = useState("after"); // "before" | "after"
+  const closeModal = () => setModal(null);
+
+  const goPrev = () => {
+    if (!modal) return;
+    if (modal.type === "pair") {
+      setModal((m) => ({ ...m, index: (m.index - 1 + items.length) % items.length }));
+      setMobileSide("after");
+    } else {
+      setModal((m) => ({ ...m, index: (m.index - 1 + realImages.length) % realImages.length }));
+    }
+  };
+
+  const goNext = () => {
+    if (!modal) return;
+    if (modal.type === "pair") {
+      setModal((m) => ({ ...m, index: (m.index + 1) % items.length }));
+      setMobileSide("after");
+    } else {
+      setModal((m) => ({ ...m, index: (m.index + 1) % realImages.length }));
+    }
+  };
+
+  const activePair = modal?.type === "pair" ? items[modal.index] : null;
+  const activeReal = modal?.type === "real" ? realImages[modal.index] : null;
+
+  // Load Firestore data realtime
+  useEffect(() => {
+    const q1 = query(collection(db, "beforeAfter"), orderBy("createdAt", "desc"));
+    const q2 = query(collection(db, "realImages"), orderBy("createdAt", "desc"));
+
+    const unsub1 = onSnapshot(q1, (snap) => {
+      setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+
+    const unsub2 = onSnapshot(q2, (snap) => {
+      setRealImages(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+
+    return () => {
+      unsub1();
+      unsub2();
+    };
+  }, []);
+
+  // ESC + arrows + lock scroll
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (!modal) return;
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowLeft") goPrev();
+      if (e.key === "ArrowRight") goNext();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = modal ? "hidden" : "auto";
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "auto";
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modal, items.length, realImages.length]);
 
   return (
-    <section
-      id="products"
-      className="relative bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 overflow-hidden"
-    >
-      {/* Decorative background elements */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <div className="absolute top-20 -left-20 w-72 h-72 bg-indigo-400/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-40 -right-20 w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl animate-pulse delay-700" />
-      </div>
+    <section id="products" className="bg-white">
+      <div className="pt-32 pb-20">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <motion.div
+            className="max-w-3xl"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs text-neutral-600">
+              <span className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+              Sản phẩm & thành phẩm
+            </div>
 
-      <div className="relative z-10 py-20 px-4">
-        {/* Header Section */}
-        <motion.div
-          className="max-w-4xl mx-auto text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          
-          <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-800 bg-clip-text text-transparent leading-tight">
-            Biến Đổi Kỳ Diệu
-          </h2>
-          
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="h-1 w-16 bg-gradient-to-r from-transparent to-yellow-400 rounded-full" />
-            <span className="text-3xl md:text-5xl font-bold text-yellow-500">TRƯỚC / SAU</span>
-            <div className="h-1 w-16 bg-gradient-to-l from-transparent to-yellow-400 rounded-full" />
-          </div>
-          
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Chứng kiến sự khác biệt rõ rệt từ những chiếc biển số cũ kỹ đến hoàn hảo như mới
-          </p>
-        </motion.div>
+            <h1 className="mt-4 text-3xl md:text-4xl font-medium text-neutral-900 tracking-tight">
+              Trước / Sau — khác biệt rõ rệt, hoàn thiện gọn & sắc.
+            </h1>
 
-        {/* Before/After Gallery */}
-        <div className="max-w-7xl mx-auto mb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <p className="mt-3 text-sm md:text-base text-neutral-600 leading-relaxed">
+              Nhấn vào khung để xem ảnh phóng to. (PC: ← → để chuyển, ESC để đóng)
+            </p>
+          </motion.div>
+
+          {/* BEFORE/AFTER GRID */}
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
             {items.map((item, i) => (
-              <motion.div
-                key={i}
-                className="group relative"
-                initial={{ opacity: 0, y: 40 }}
+              <motion.button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  setMobileSide("after");
+                  setModal({ type: "pair", index: i });
+                }}
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
                 viewport={{ once: true }}
-                onMouseEnter={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
+                className="
+                  group text-left rounded-3xl border border-neutral-200 bg-white
+                  overflow-hidden shadow-sm hover:shadow-md transition
+                  focus:outline-none focus:ring-2 focus:ring-neutral-900/20
+                "
               >
-                <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100">
-                  {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
-                  
-                  <div className="grid grid-cols-2">
-                    {/* Before Image */}
-                    <div className="relative overflow-hidden">
-                      <img
-                        src={item.before}
-                        alt={`Trước ${i + 1}`}
-                        className="w-full h-72 md:h-80 object-cover transition-transform duration-700 group-hover:scale-110"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold px-5 py-2 rounded-lg text-sm shadow-lg backdrop-blur-sm">
-                        TRƯỚC
-                      </div>
-                    </div>
-                    
-                    {/* After Image */}
-                    <div className="relative overflow-hidden border-l-2 border-white">
-                      <img
-                        src={item.after}
-                        alt={`Sau ${i + 1}`}
-                        className="w-full h-72 md:h-80 object-cover transition-transform duration-700 group-hover:scale-110"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-4 right-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold px-5 py-2 rounded-lg text-sm shadow-lg backdrop-blur-sm">
-                        SAU
-                      </div>
-                    </div>
+                <div className="grid grid-cols-2">
+                  {/* Before */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
+                    <img
+                      src={item.before}
+                      alt={`Trước ${i + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      loading="lazy"
+                    />
+                    <span className="absolute top-3 left-3 text-[11px] px-2.5 py-1 rounded-full bg-white/90 border border-neutral-200 text-neutral-900">
+                      TRƯỚC
+                    </span>
                   </div>
 
-                  {/* Hover Effect: Arrow */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                    <motion.div
-                      className="bg-white/95 backdrop-blur-sm rounded-full p-4 shadow-2xl"
-                      initial={{ scale: 0, rotate: 0 }}
-                      animate={hoveredIndex === i ? { scale: 1, rotate: 360 } : { scale: 0, rotate: 0 }}
-                      transition={{ duration: 0.5, type: "spring" }}
-                    >
-                      <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
-                    </motion.div>
+                  {/* After */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100 border-l border-white">
+                    <img
+                      src={item.after}
+                      alt={`Sau ${i + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      loading="lazy"
+                    />
+                    <span className="absolute top-3 right-3 text-[11px] px-2.5 py-1 rounded-full bg-white/90 border border-neutral-200 text-neutral-900">
+                      SAU
+                    </span>
                   </div>
                 </div>
-              </motion.div>
+
+                <div className="p-4 md:p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold text-neutral-900">Mẫu #{i + 1}</p>
+                    <span className="text-xs text-neutral-500">Nhấn để phóng to</span>
+                  </div>
+                  <div className="mt-3 h-px w-0 bg-neutral-900/60 group-hover:w-full transition-all duration-500" />
+                </div>
+              </motion.button>
             ))}
           </div>
+
+          {/* REAL IMAGES */}
+          <motion.div
+            className="mt-16 md:mt-20"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-xl md:text-2xl font-medium text-neutral-900">Hình ảnh thực tế</h2>
+            <p className="mt-1 text-sm text-neutral-600">Thành phẩm & quy trình — bấm để xem lớn.</p>
+
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {realImages.map((img, idx) => (
+                <button
+                  key={img.id}
+                  type="button"
+                  onClick={() => setModal({ type: "real", index: idx })}
+                  className="
+                    group rounded-2xl border border-neutral-200 bg-white overflow-hidden
+                    shadow-sm hover:shadow-md transition
+                    focus:outline-none focus:ring-2 focus:ring-neutral-900/20
+                  "
+                >
+                  <div className="relative aspect-square bg-neutral-100 overflow-hidden">
+                    <img
+                      src={img.url}
+                      alt={`Ảnh thực tế ${idx + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
         </div>
-
-        {/* CTA Section */}
-        <motion.div
-          className="max-w-4xl mx-auto text-center mb-32 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-3xl p-12 shadow-2xl relative overflow-hidden"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
-          
-          <div className="relative z-10">
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Sẵn Sàng Làm Mới Biển Số?
-            </h3>
-            <p className="text-indigo-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-              Mỗi biển số là một câu chuyện biến đổi từ cũ kỹ thành{" "}
-              <span className="font-bold text-yellow-300">đẹp như mới</span>.
-              <br />
-              <span className="font-bold text-white">ÉP BIỂN SỐ ĐỆ NHẤT</span> tự hào mang đến chất lượng tốt nhất.
-            </p>
-            <motion.a
-              href="#contact"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold px-10 py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span>Liên Hệ Ngay</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </motion.a>
-          </div>
-        </motion.div>
-
-        {/* Real Images Section */}
-        <motion.div
-          className="max-w-7xl mx-auto"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="text-center mb-16">
-            <motion.div
-              className="inline-block mb-4 px-6 py-2 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold tracking-wide"
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.2 }}
-            >
-              📸 GALLERY
-            </motion.div>
-            
-            <h3 className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-indigo-700 to-indigo-900 bg-clip-text text-transparent">
-              Hình Ảnh Thực Tế
-            </h3>
-            
-            <p className="text-xl text-yellow-600 font-semibold">
-              Tại Cửa Hàng Của Chúng Tôi
-            </p>
-          </div>
-
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-            {realImages.map((src, i) => (
-              <motion.div
-                key={i}
-                className="break-inside-avoid group"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: i * 0.03 }}
-                viewport={{ once: true }}
-              >
-                <div className="relative overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 bg-white p-2">
-                  <img
-                    src={src}
-                    alt={`Hình thực tế ${i + 1}`}
-                    className="w-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </div>
 
       <Contact />
       <Footer />
+
+      {/* MODAL */}
+      {modal && (
+        <div
+          className="fixed inset-0 z-[999] bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 md:p-4"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) closeModal();
+          }}
+        >
+          <div className="relative w-full max-w-6xl">
+            <button
+              onClick={closeModal}
+              className="
+                absolute -top-12 right-0
+                md:top-3 md:right-3
+                w-11 h-11
+                rounded-full bg-red-600 hover:bg-red-700
+                text-white text-lg
+                flex items-center justify-center
+                shadow-lg shadow-red-600/25
+                z-20
+              "
+              aria-label="Đóng"
+              title="Đóng"
+            >
+              ✕
+            </button>
+
+            <div className="grid md:grid-cols-[1fr_340px] gap-3 md:gap-4">
+              {/* Main content */}
+              <div className="relative rounded-2xl overflow-hidden bg-black">
+                {/* Pair: TRƯỚC/SAU */}
+                {activePair && (
+                  <>
+                    {/* MOBILE: 1 ảnh / lần */}
+                    <div className="sm:hidden relative">
+                      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20">
+                        <div className="flex rounded-full overflow-hidden border border-white/15 bg-black/35 backdrop-blur">
+                          <button
+                            onClick={() => setMobileSide("before")}
+                            className={`px-4 py-2 text-xs font-semibold transition ${
+                              mobileSide === "before" ? "bg-white text-black" : "text-white/90"
+                            }`}
+                          >
+                            TRƯỚC
+                          </button>
+                          <button
+                            onClick={() => setMobileSide("after")}
+                            className={`px-4 py-2 text-xs font-semibold transition ${
+                              mobileSide === "after" ? "bg-white text-black" : "text-white/90"
+                            }`}
+                          >
+                            SAU
+                          </button>
+                        </div>
+                      </div>
+
+                      <img
+                        src={mobileSide === "before" ? activePair.before : activePair.after}
+                        alt={mobileSide === "before" ? "Trước" : "Sau"}
+                        className="w-full h-[82svh] object-contain bg-black"
+                        draggable={false}
+                      />
+                    </div>
+
+                    {/* DESKTOP: 2 ảnh song song */}
+                    <div className="hidden sm:grid grid-cols-2">
+                      <div className="relative bg-black">
+                        <img
+                          src={activePair.before}
+                          alt="Trước"
+                          className="w-full h-[72vh] object-contain bg-black"
+                          draggable={false}
+                        />
+                        <span className="absolute top-3 left-3 text-[11px] px-2.5 py-1 rounded-full bg-white/90 border border-neutral-200 text-neutral-900">
+                          TRƯỚC
+                        </span>
+                      </div>
+
+                      <div className="relative bg-black sm:border-l border-white/10">
+                        <img
+                          src={activePair.after}
+                          alt="Sau"
+                          className="w-full h-[72vh] object-contain bg-black"
+                          draggable={false}
+                        />
+                        <span className="absolute top-3 right-3 text-[11px] px-2.5 py-1 rounded-full bg-white/90 border border-neutral-200 text-neutral-900">
+                          SAU
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Single image */}
+                {activeReal && (
+                  <img
+                    src={activeReal.url}
+                    alt="Ảnh thực tế"
+                    className="w-full h-[82svh] sm:h-[72vh] object-contain bg-black"
+                    draggable={false}
+                  />
+                )}
+
+                {/* Prev/Next */}
+                <button
+                  onClick={goPrev}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full"
+                  aria-label="Trước"
+                  title="Trước"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={goNext}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full"
+                  aria-label="Sau"
+                  title="Sau"
+                >
+                  ›
+                </button>
+
+                {/* Mobile bottom close */}
+                <div className="md:hidden absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/60 to-transparent">
+                  <button
+                    onClick={closeModal}
+                    className="w-full py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold"
+                  >
+                    Đóng
+                  </button>
+                </div>
+              </div>
+
+              {/* Side info */}
+              <div className="rounded-2xl border border-white/10 bg-white/10 text-white p-4 md:p-5">
+                <p className="text-sm font-semibold">
+                  {modal.type === "pair"
+                    ? `Trước / Sau — Mẫu #${modal.index + 1}`
+                    : `Ảnh thực tế #${modal.index + 1}`}
+                </p>
+
+                <p className="mt-3 text-sm leading-relaxed text-white/85">
+                  Nhấn ‹ › để chuyển ảnh. Mobile: chọn TRƯỚC/SAU ở trên.
+                </p>
+
+                <div className="mt-6 text-xs text-white/60">(PC: dùng ← →, ESC)</div>
+
+                <button
+                  onClick={closeModal}
+                  className="hidden md:inline-flex mt-6 px-4 py-2 rounded-full border border-white/20 text-sm text-white/90 hover:text-white hover:bg-white/10 transition"
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

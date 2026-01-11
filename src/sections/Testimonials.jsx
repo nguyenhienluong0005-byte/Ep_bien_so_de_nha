@@ -1,78 +1,197 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
 
-function CustomerReviews() {
-  const reviewImages = [
-    { url: "https://i.postimg.cc/8PbLHkcL/1.jpg",  text: "Dịch vụ tuyệt vời, làm nhanh và đẹp!", rating: 5 },
-    { url: "https://i.postimg.cc/K8vBsX3W/10.jpg",  text: "Biển số sáng bóng, đúng chuẩn, rất hài lòng!", rating: 5 },
-    { url: "https://i.postimg.cc/P5rYFGvB/11.jpg",  text: "Làm kỹ, chăm chút từng chi tiết!", rating: 5 },
-    { url: "https://i.postimg.cc/qvMyZfCH/12.jpg",  text: "Giá tốt, chất lượng cao!", rating: 5 },
-    { url: "https://i.postimg.cc/HksXPG7x/13.jpg",  text: "Biển số nhìn như mới 100%, tuyệt!", rating: 5 },
-    { url: "https://i.postimg.cc/zGtWsdnr/14.jpg",  text: "Phục hồi quá đẹp, ngoài mong đợi!", rating: 5 },
-    { url: "https://i.postimg.cc/Jz6JfTbW/15.jpg",   text: "Làm rất có tâm, rất uy tín!", rating: 5 },
-    { url: "https://i.postimg.cc/3xSpsLgK/16.jpg",  text: "Trước – sau khác biệt rõ rệt, tuyệt vời!", rating: 5 },
-    { url: "https://i.postimg.cc/wjfJCWhB/17.jpg",  text: "Rất chuyên nghiệp, chất lượng cao!", rating: 5 },
-    { url: "https://i.postimg.cc/K8qL69nR/18.jpg",  text: "Quy trình làm việc rõ ràng, nhanh chóng!", rating: 5 },
-    { url: "https://i.postimg.cc/P53Zg6mL/19.jpg",  text: "Rất hài lòng với dịch vụ!", rating: 5 },
-    { url: "https://i.postimg.cc/8PbLHkcM/2.jpg",  text: "Biển số đẹp – giá tốt – làm nhanh!", rating: 5 },
-    { url: "https://i.postimg.cc/mgXMvdQM/20.jpg",  text: "Làm xe máy rất đẹp, chuẩn form!", rating: 5 },
-    { url: "https://i.postimg.cc/Gm7YWMkF/21.jpg",  text: "Làm xe ô tô tuyệt vời!", rating: 5 },
-    { url: "https://i.postimg.cc/YCng5X1f/22.jpg",  text: "Phục hồi biển số quá chất lượng!", rating: 5 },
-    { url: "https://i.postimg.cc/g0xRmvDX/23.jpg",  text: "Khác biệt rõ rệt sau khi làm!", rating: 5 },
-    { url: "https://i.postimg.cc/tgsPph5N/24.jpg",  text: "Quá chuyên nghiệp!", rating: 5 },
-    { url: "https://i.postimg.cc/3wkpYgBL/25.jpg",  text: "Rất uy tín và chất lượng!", rating: 5 },
-    { url: "https://i.postimg.cc/wB1JghVP/26.jpg",  text: "Biển số ô tô làm cực đẹp!", rating: 5 },
-    { url: "https://i.postimg.cc/s2MSspmF/27.jpg",  text: "Phục hồi biển số như mới!", rating: 5 },
-    { url: "https://i.postimg.cc/nLNmzCRd/28.jpg",  text: "Trước sau khác biệt 100%!", rating: 5 },
-    { url: "https://i.postimg.cc/N0ZXM5JW/29.jpg",  text: "Quy trình nhanh, rõ ràng!", rating: 5 },
-    { url: "https://i.postimg.cc/8PbLHkcJ/3.jpg",  text: "Làm biển số quá đẹp!", rating: 5 },
-    { url: "https://i.postimg.cc/m2S7wZkt/4.jpg",  text: "Xe máy làm rất chuẩn!", rating: 5 },
-    { url: "https://i.postimg.cc/YqxQ320Z/5.jpg",  text: "Ô tô làm hoàn hảo!", rating: 5 },
-    { url: "https://i.postimg.cc/GhjvQ3tN/6.jpg",  text: "Phục hồi chất lượng cao!", rating: 5 },
-    { url: "https://i.postimg.cc/X7g98NqP/7.jpg",  text: "Trước – sau đẹp hết nấc!", rating: 5 },
-    { url: "https://i.postimg.cc/K8vBsX35/8.jpg",  text: "Quy trình làm việc tuyệt!", rating: 5 },
-    { url: "https://i.postimg.cc/9QFZN3wN/9.jpg",  text: "Biển số xe máy đẹp chuẩn!", rating: 5 },
-  ];
+export default function CustomerReviews() {
+  const [reviews, setReviews] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/cPNwc5zueyXv4muG7";
+
+  useEffect(() => {
+    const qRef = query(collection(db, "customer_reviews"), orderBy("createdAt", "desc"));
+    const unsub = onSnapshot(qRef, (snap) => {
+      setReviews(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, []);
+
+  // ESC + arrows + lock scroll when modal open
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setActiveIndex(null);
+      if (e.key === "ArrowRight" && activeIndex !== null) {
+        setActiveIndex((prev) => (prev + 1) % reviews.length);
+      }
+      if (e.key === "ArrowLeft" && activeIndex !== null) {
+        setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = activeIndex !== null ? "hidden" : "auto";
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "auto";
+    };
+  }, [activeIndex, reviews.length]);
+
+  const active = activeIndex !== null ? reviews[activeIndex] : null;
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-50 to-white">
-      <div className="text-center mb-16">
-        <div className="inline-block px-4 py-2 bg-yellow-400 rounded-full mb-4 font-bold">
-          ⭐ ĐÁNH GIÁ KHÁCH HÀNG
-        </div>
-        <h2 className="text-5xl font-black text-indigo-700 mb-4">
-          Hình Ảnh Khách Hàng Đánh Giá
-        </h2>
-        <p className="text-gray-600 text-lg">
-          Tổng hợp những phản hồi chân thực nhất từ khách hàng
-        </p>
-      </div>
-
-      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6">
-        {reviewImages.map((img, i) => (
-          <div
-            key={i}
-            className="bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition cursor-pointer"
-          >
-            <div className="aspect-square rounded-xl overflow-hidden mb-4">
-              <img src={img.url} className="w-full h-full object-cover" />
-            </div>
-
-            <h4 className="font-bold text-gray-800">{img.name}</h4>
-
-            <div className="flex text-yellow-400 text-lg">
-              {Array(img.rating).fill().map((_, j) => (
-                <span key={j}>⭐</span>
-              ))}
-            </div>
-
-            <p className="text-gray-600 italic mt-2">
-              "{img.text}"
-            </p>
+    <section className="bg-white pb-24">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs text-neutral-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+            Đánh giá khách hàng
           </div>
-        ))}
+
+          <h2 className="mt-4 text-3xl md:text-4xl font-medium text-neutral-900 tracking-tight">
+            Hình ảnh phản hồi thực tế
+          </h2>
+
+          <p className="mt-3 text-sm md:text-base text-neutral-600 leading-relaxed">
+            Nhấn vào ảnh để xem phóng to.
+          </p>
+        </div>
+
+        {reviews.length === 0 ? (
+          <div className="mt-10 text-sm text-neutral-600">
+            Chưa có đánh giá nào. Admin vào thêm sau nhé.
+          </div>
+        ) : (
+          <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {reviews.map((img, i) => (
+              <button
+                key={img.id}
+                type="button"
+                onClick={() => setActiveIndex(i)}
+                className="
+                  group text-left rounded-2xl border border-neutral-200 bg-white
+                  overflow-hidden shadow-sm hover:shadow-md transition
+                  focus:outline-none focus:ring-2 focus:ring-neutral-900/20
+                "
+              >
+                <div className="relative aspect-square overflow-hidden">
+                  <img
+                    src={img.url}
+                    alt={`Review ${i + 1}`}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition" />
+                </div>
+
+                <div className="p-3 md:p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="text-xs text-neutral-500">
+                      {"★".repeat(Number(img.rating || 5))}
+                    </div>
+                    <span className="text-[11px] text-neutral-500">Nhấn để xem</span>
+                  </div>
+
+                  <p className="mt-2 text-sm text-neutral-700 leading-relaxed line-clamp-2">
+                    “{img.text || "Đánh giá"}”
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Modal */}
+      {active && (
+        <div
+          className="fixed inset-0 z-[999] bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 md:p-4"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setActiveIndex(null);
+          }}
+        >
+          <div className="relative w-full max-w-5xl">
+            <div className="grid md:grid-cols-[1fr_340px] gap-3 md:gap-4">
+              <div className="relative rounded-2xl overflow-hidden bg-black">
+                <img
+                  src={active.url}
+                  alt="Review preview"
+                  className="w-full h-[72vh] md:h-[70vh] object-contain bg-black"
+                  draggable={false}
+                />
+
+                <button
+                  onClick={() => setActiveIndex(null)}
+                  className="absolute top-3 right-3 w-11 h-11 rounded-full bg-red-600 hover:bg-red-700 text-white text-lg flex items-center justify-center shadow-lg shadow-red-600/25"
+                  aria-label="Đóng"
+                  type="button"
+                >
+                  ✕
+                </button>
+
+                <button
+                  onClick={() =>
+                    setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length)
+                  }
+                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full"
+                  aria-label="Ảnh trước"
+                  type="button"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={() => setActiveIndex((prev) => (prev + 1) % reviews.length)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full"
+                  aria-label="Ảnh sau"
+                  type="button"
+                >
+                  ›
+                </button>
+
+                <div className="md:hidden absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/60 to-transparent">
+                  <button
+                    onClick={() => setActiveIndex(null)}
+                    className="w-full py-3 rounded-xl bg-white text-black text-sm font-semibold"
+                    type="button"
+                  >
+                    Đóng
+                  </button>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/10 text-white p-4 md:p-5">
+                <div className="text-xs text-white/70">
+                  {"★".repeat(Number(active.rating || 5))}
+                </div>
+
+                <p className="mt-3 text-sm leading-relaxed text-white/90">
+                  “{active.text}”
+                </p>
+
+                <div className="mt-6 text-xs text-white/60">
+                  (PC: ESC để đóng — ← → để chuyển)
+                </div>
+
+                <a
+                  href={GOOGLE_MAPS_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex text-xs underline text-white/80 hover:text-white"
+                >
+                  Mở Google Maps (Chỉ đường)
+                </a>
+
+                <button
+                  onClick={() => setActiveIndex(null)}
+                  className="hidden md:inline-flex mt-6 px-4 py-2 rounded-full border border-white/20 text-sm text-white/90 hover:text-white hover:bg-white/10 transition"
+                  type="button"
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
-
-export default CustomerReviews;

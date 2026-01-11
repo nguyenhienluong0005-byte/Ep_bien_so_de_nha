@@ -11,8 +11,8 @@ function Home() {
     <div className="bg-gray-50 text-gray-900 font-sans">
       <Hero />
       <About />
-      <Services />
-      <Gallery />
+      {/* <Services /> */}
+      {/* <Gallery /> */}
       <Testimonials />
       <Contact />
       <Footer />
